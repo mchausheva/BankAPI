@@ -1,5 +1,6 @@
 package com.sgfs.Model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -10,24 +11,35 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.springframework.lang.NonNull;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Data
 @RequiredArgsConstructor
-//@XmlRootElement(name = "e_response")
-//@XmlAccessorType(XmlAccessType.FIELD)
-//@JsonIncludeProperties
-public class EResponse {
+@NoArgsConstructor(access = AccessLevel.PUBLIC, force = true )
+@XmlRootElement(name = "e_response")
+@XmlAccessorType(XmlAccessType.FIELD)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class EResponse implements Serializable{
 
-	private final Status status;
+	private static final long serialVersionUID = 1L;
+
+	@JsonFormat()
+	@NonNull
+	private ResStatus status;
 	
 	@JsonFormat(pattern = "yyyyMMdd")
+	//@XmlJavaTypeAdapter(DateAdapter.class)
+	@XmlElement(name = "valid_to")
 	private final LocalDate validTo;
 	
 	private final Integer amount;
@@ -36,21 +48,26 @@ public class EResponse {
 	
 	private final Integer total;
 	
+	@XmlElement(name = "short_desc")
 	private final String shortDesc;
 	
+	@XmlElement(name = "long_desc")
 	private final String longDesc;
 	 
+	@XmlElement(name = "second_id")
 	private final String secondId;
 	
+	@XmlElement(name = "error_code")
 	@Setter
 	private String errorCode;
 	
+	@XmlElement(name = "error_des")
 	@Setter
 	private String errorDes;
 
 
 	@JsonFormat(shape = JsonFormat.Shape.OBJECT)
-	public enum Status {
+	public enum ResStatus {
 		OK("00"),
 		NO_PENDING_DUE("62"),
 		MERCHANT_REF_NOT_FOUND("14"),
@@ -68,15 +85,13 @@ public class EResponse {
 		
 		private String status;
 
-		private Status(String status) {
+		private ResStatus(String status) {
 			this.status = status;
 		}
 		
 		@JsonValue
 		public String getStatus() {
 			return status;
-		}
-		
-		
+		}	
 	}
 }
