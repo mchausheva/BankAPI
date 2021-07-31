@@ -147,7 +147,6 @@ public class EpayService {
 	public MerchantList getMerchant(String lang) {
 		log.info("Start getMerchants: ");
 		
-		
 		log.info("lang = " + lang);
 		if (lang == "bg") {
 			return new MerchantList (merchantsListBg.size(), merchantsListBg);
